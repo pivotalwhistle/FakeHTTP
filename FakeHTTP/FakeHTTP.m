@@ -1,7 +1,7 @@
 #import "FakeHTTP.h"
 #import "FakeHTTPURLProtocol.h"
 
-static __strong NSMutableDictionary *__responseForURL;
+static __strong NSMutableDictionary *__responseForURL = nil;
 
 @implementation FakeHTTP
 
@@ -11,15 +11,21 @@ static __strong NSMutableDictionary *__responseForURL;
 }
 
 + (void)stopMocking {
+    __responseForURL = nil;
     [NSURLProtocol unregisterClass:[FakeHTTPURLProtocol class]];
 }
 
++ (BOOL)isMocking
+{
+    return __responseForURL != nil;
+}
+
 + (void)registerURL:(NSURL *)url withResponse:(FakeHTTPURLResponse *)response {
-    [__responseForURL setObject:response forKey:url];
+    [__responseForURL setObject:response forKey:url.absoluteString];
 }
 
 + (FakeHTTPURLResponse *)responseForURL:(NSURL *)url {
-    return [__responseForURL objectForKey:url];
+    return [__responseForURL objectForKey:url.absoluteString];
 }
 
 + (void)reset {

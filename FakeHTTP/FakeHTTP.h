@@ -2,6 +2,7 @@
 
 @interface FakeHTTP : NSObject
 
++ (BOOL)isMocking;
 + (void)startMocking;
 + (void)stopMocking;
 
